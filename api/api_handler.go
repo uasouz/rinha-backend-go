@@ -2,7 +2,6 @@ package api
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -29,28 +28,24 @@ func (h *PeopleHandler) AddPerson(ctx *fiber.Ctx) error {
 	err := ctx.BodyParser(&request)
 
 	if err != nil {
-		log.Println(err)
 		return ctx.Status(fiber.StatusUnprocessableEntity).JSON(ErrorResponse{Error: err.Error()})
 	}
 
 	birthdate, err := time.Parse("2006-01-02", request.Birthdate)
 
 	if err != nil {
-		log.Println(err)
 		return ctx.Status(fiber.StatusUnprocessableEntity).JSON(ErrorResponse{Error: ErrInvalidBirthdate.Error()})
 	}
 
 	err = request.Validate()
 
 	if err != nil {
-		log.Println(err)
 		return ctx.Status(fiber.StatusUnprocessableEntity).JSON(ErrorResponse{Error: err.Error()})
 	}
 
 	personUUID, err := uuid.NewV4()
 
 	if err != nil {
-		log.Println(err)
 		return ctx.Status(fiber.StatusInternalServerError).JSON(ErrorResponse{Error: err.Error()})
 	}
 
@@ -65,21 +60,18 @@ func (h *PeopleHandler) AddPerson(ctx *fiber.Ctx) error {
 	_, err = h.store.AddPerson(ctx.Context(), person)
 
 	if err != nil {
-		log.Println(err)
 		return ctx.Status(fiber.StatusInternalServerError).JSON(ErrorResponse{Error: err.Error()})
 	}
 
 	personJSONCache, err := json.Marshal(person)
 
 	if err != nil {
-		log.Println(err)
 		return ctx.Status(fiber.StatusInternalServerError).JSON(ErrorResponse{Error: err.Error()})
 	}
 
 	err = h.cache.Set(ctx.Context(), person.UUID, personJSONCache, 0).Err()
 
 	if err != nil {
-		log.Println(err)
 		return ctx.Status(fiber.StatusInternalServerError).JSON(ErrorResponse{Error: err.Error()})
 	}
 
@@ -116,7 +108,7 @@ func (h *PeopleHandler) GetPeople(ctx *fiber.Ctx) error {
 	people, err := h.store.GetPeople(ctx.Context(), options)
 
 	if err != nil {
-		log.Println(err)
+
 		return ctx.Status(http.StatusInternalServerError).SendString(err.Error())
 	}
 
@@ -168,7 +160,7 @@ func (h *PeopleHandler) GetPerson(ctx *fiber.Ctx) error {
 	cachedPerson, err := h.cache.Get(ctx.Context(), personID).Result()
 
 	if err != nil {
-		log.Println(err)
+
 		return ctx.Status(fiber.StatusInternalServerError).JSON(ErrorResponse{Error: err.Error()})
 	}
 
@@ -184,7 +176,7 @@ func (h *PeopleHandler) GetPerson(ctx *fiber.Ctx) error {
 		if err == persistence.ErrPersonNotFound {
 			return ctx.Status(fiber.StatusNotFound).JSON(ErrorResponse{Error: err.Error()})
 		}
-		log.Println(err)
+
 		return ctx.Status(fiber.StatusInternalServerError).JSON(ErrorResponse{Error: err.Error()})
 	}
 
@@ -195,7 +187,7 @@ func (h *PeopleHandler) GetPeopleCount(ctx *fiber.Ctx) error {
 	count, err := h.store.GetPeopleCount(ctx.Context())
 
 	if err != nil {
-		log.Println(err)
+
 		return ctx.Status(fiber.StatusInternalServerError).JSON(ErrorResponse{Error: err.Error()})
 	}
 

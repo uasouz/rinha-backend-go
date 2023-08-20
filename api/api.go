@@ -2,7 +2,6 @@ package api
 
 import (
 	"log"
-	"time"
 
 	"github.com/goccy/go-json"
 	"github.com/redis/go-redis/v9"
@@ -28,11 +27,11 @@ func (s *Server) Start() error {
 
 	s.fiberApp = fiber.New(
 		fiber.Config{
-			JSONEncoder:  json.Marshal,
-			JSONDecoder:  json.Unmarshal,
-			ReadTimeout:  30 * time.Millisecond,
-			WriteTimeout: 15 * time.Millisecond,
-			IdleTimeout:  10 * time.Millisecond,
+			JSONEncoder: json.Marshal,
+			JSONDecoder: json.Unmarshal,
+			//ReadTimeout:  30 * time.Millisecond,
+			//WriteTimeout: 20 * time.Millisecond,
+			//IdleTimeout:  30 * time.Second,
 		},
 	)
 

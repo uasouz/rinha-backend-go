@@ -63,10 +63,6 @@ services:
       - two
     ports:
       - "9999:9999"
-#    ulimits:
-#      nofile:
-#        soft: 10000
-#        hard: 10000
     deploy:
       resources:
         limits:
