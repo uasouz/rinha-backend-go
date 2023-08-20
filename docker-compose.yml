@@ -15,10 +15,10 @@ services:
         condition: service_healthy
       cache:
         condition: service_started
-    ulimits:
-      nofile:
-        soft: 100000
-        hard: 100000
+#    ulimits:
+#      nofile:
+#        soft: 100000
+#        hard: 100000
     deploy:
       resources:
         limits:
@@ -42,10 +42,10 @@ services:
         condition: service_started
       cache:
         condition: service_started
-    ulimits:
-      nofile:
-        soft: 100000
-        hard: 100000
+#    ulimits:
+#      nofile:
+#        soft: 100000
+#        hard: 100000
     deploy:
       resources:
         limits:
